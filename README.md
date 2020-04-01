@@ -1,2 +1,2 @@
 # lara_boiler
-My temp
+Basic flow for creating Laravel using Docker-compose.
