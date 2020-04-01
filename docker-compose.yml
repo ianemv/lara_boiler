@@ -1,0 +1,83 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb:latest
+    container_name: ${APP_SLUG}_db
+    restart: always
+    tty: true
+    environment:
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    ports:
+      - "3313:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - ${APP_SLUG}-network
+
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/web/dev.Dockerfile
+    image: digitalocean.com/php
+    container_name: ${APP_SLUG}_app
+    restart: always
+    tty: true
+    depends_on:
+      - db
+    environment:
+      SERVICE_NAME: ${APP_SLUG}_app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker/web/.user.ini/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - ${APP_SLUG}-network
+
+ #Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: ${APP_SLUG}_webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8011:80"
+      - "4450:443"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - ${APP_SLUG}-network
+
+  # PHPMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: ${APP_SLUG}_phpmyadmin
+    restart: always
+    links:
+      - db:mysql
+    ports:
+      - 8187:80
+    depends_on:
+      - db
+    environment:
+      MYSQL_USERNAME: ${DB_USERNAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      PMA_PORT: 3306
+    networks:
+      - ${APP_SLUG}-network
+
+#Docker Networks
+networks:
+  lara_boiler-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
+
