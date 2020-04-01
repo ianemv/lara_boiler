@@ -1,7 +1,10 @@
 # Laravel Template Boiler
 Basic flow for creating Laravel using Docker-compose.
 `
+`
 This template uses Digital Ocean image for the Laravel PHP.
+`
+`
 `
 Steps
 
@@ -17,4 +20,6 @@ Steps
 
 6. For JWT auth  follow the procedures from https://jwt-auth.readthedocs.io/en/develop/laravel-installation/
     which basically uses composer install only.
+
+Note: For .env file checkout the APP_SLUG as it will be use in docker-compose.yml file.
 
