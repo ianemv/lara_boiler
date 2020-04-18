@@ -8,7 +8,7 @@ This template uses Digital Ocean image for the Laravel PHP.
 `
 Steps
 
-1. Git clone latest Laravel 
+1. Git clone latest Laravel at git@github.com:laravel/laravel.git
 2. Add .env file or edit .env.example after cloning the Laravel's 
    Since this repo uses Mariadb, set the localhost or DB_HOST to 'db' or whatever name you desire to set in docker-compose.yml.
 3. Edit docker-compose.yml by changing the PORT numbers
