@@ -1,7 +1,10 @@
-FROM php:7.3-fpm-alpine
+FROM php:7.3-fpm
 
 # Copy composer.lock and composer.json
-COPY composer.lock composer.json /var/www/
+# Copy composer.lock and composer.json
+# COPY composer.lock composer.json /var/www/
+COPY ../../auth-api/composer.json /var/www/
+COPY ../../auth-api/package.json /var/www/
 
 # Set working directory
 WORKDIR /var/www
@@ -9,7 +12,7 @@ WORKDIR /var/www
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
-    mysql-client \
+    mariadb-client \
     libpng-dev \
     libjpeg62-turbo-dev \
     libfreetype6-dev \
